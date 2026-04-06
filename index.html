@@ -298,7 +298,7 @@ const CHARACTERS = [
     bio: "Écrivez ici le background de votre personnage. Son histoire, ses motivations, ses secrets. Ce texte peut être aussi long que nécessaire — la fiche scrollera élégamment.",
     personality: ["Loyal", "Optimiste", "Bienveillant", "Amical"],
     tropes: ["Boys Love", "Âmes soeurs"],
-    facts: ["Sa pâtisserie préférée est le Paris-Brest", "Woo a toujours été économe à cause de son enfance, il n'ai pas radin, mais il a toujours mis de côté.", "Il conduit un pick-up", "Il adore la nature et faire de la randonnée", "Woo, est un habitué de la salle de sport",],
+    facts: ["Sa pâtisserie préférée est le Paris-Brest.", "Woo a toujours été économe à cause de son enfance, il n'ai pas radin, mais il a toujours mis de côté.", "Il conduit un pick-up.", "Il adore la nature et faire de la randonnée. Passer un week-end loin de tout ne lui fait pas peur.", "Woo, est un habitué de la salle de sport.", "C'est un grand romantique ! Bien sûr qu'il adore les comédies romantiques."],
     locations: ["Le bar du quartier nord", "La bibliothèque municipale", "Les toits de la ville"],
     links: [
       { name: "Autre Personnage", relation: "Allié de circonstance" }
@@ -574,14 +574,14 @@ function openModal(char) {
     <div class="modal-body">
       <blockquote class="modal-quote" style="border-left: 2px solid ${char.accent}88">${char.quote}</blockquote>
 
-      <div class="modal-section-label">Personnalité</div>
-      <div class="modal-traits" style="margin-bottom:32px">
-        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
-      </div>
-
       <div class="modal-section-label">Tropes</div>
       <div class="modal-tropes">
         ${char.tropes.map(t => `<span class="modal-trope" style="color:${char.accent}; border:1px solid ${char.accent}33; background:${char.accent}0a">${t}</span>`).join("")}
+      </div>
+
+        <div class="modal-section-label">Personnalité</div>
+      <div class="modal-traits" style="margin-bottom:32px">
+        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
       </div>
 
       <div class="modal-stats">
