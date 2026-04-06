@@ -293,6 +293,9 @@ const CHARACTERS = [
     alias: "Chef Kang ✦ Woo",
     faceclaim: "Wonho ✦ Soliste",
     astro: "Poisson",
+    natio: "Coréen",
+    mbti: "dftg",
+    sexuality: "Bisexuel",
     age: 32,
     job: "Chef pâtissier",
     genre: "tranche_de_vie",
@@ -561,7 +564,10 @@ function openModal(char) {
   const statsData = [
     { label: "Âge", value: char.age + " ans" },
     { label: "Métier", value: char.job },
-    { label: "Astrologie", value: char.astro }
+    { label: "Astrologie", value: char.astro },
+    { label: "MBTI", value: char.mbti },
+    { label: "Nationnalité", value: char.natio },
+    { label: "Orientation sexuelle", value: char.sexuality }
   ];
 
   inner.innerHTML = `
