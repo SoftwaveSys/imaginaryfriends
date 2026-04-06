@@ -258,17 +258,23 @@ footer {
 
 <div class="page">
   <header>
-    <div class="header-sub">Galerie de Personnages</div>
+    <div class="header-sub">☽ Galerie de Personnages ☾</div>
+    <div class="header-symbols" style="font-size:22px; letter-spacing:18px; color:#c2860e44; margin-bottom:14px; animation:fadeIn 1s 0.1s both;">✦ ☾ ☼ ✧ ☽ ✦</div>
     <h1 class="header-title">Imaginary Friends</h1>
     <p class="header-desc">Cliquez sur une carte pour découvrir l'histoire complète du personnage.</p>
     <div class="header-line"></div>
+    <div class="header-symbols" style="font-size:16px; letter-spacing:14px; color:#cf22e733; margin-top:16px; animation:fadeIn 1s 0.7s both;">☽ ✧ ◯ ✧ ☾</div>
   </header>
 
   <div class="filters" id="filters"></div>
   <div class="grid" id="grid"></div>
   <div class="empty-msg" id="empty" style="display:none;">Aucun personnage dans ce genre pour le moment.</div>
 
-  <footer><div class="footer-text">Roleplay Character Showcase</div></footer>
+  <footer>
+    <div style="font-size:14px; letter-spacing:12px; color:#c2860e22; margin-bottom:14px;">✦ ☾ ☼ ☽ ✦</div>
+    <div class="footer-text">☽ Roleplay Character Showcase ☾</div>
+    <div style="font-size:12px; letter-spacing:10px; color:#cf22e718; margin-top:12px;">✧ ◯ ✧</div>
+  </footer>
 </div>
 
 <div class="modal-overlay" id="modal">
@@ -283,20 +289,26 @@ const CHARACTERS = [
   {
     id: 1,
     name: "Kang Geonwoo",
-    alias: "Chef Kang,Woo",
-    faceclaim: "Wonho - Soliste",
+    alias: "Chef Kang ✦ Woo",
+    faceclaim: "Wonho ✦ Soliste",
     age: 32,
-    job: "Chef Pâtissier",
-    genre: "Trance de vie",
+    job: "Chef pâtissier",
+    genre: "tranche_de_vie",
     quote: "« Une citation qui définit le personnage. »",
     bio: "Écrivez ici le background de votre personnage. Son histoire, ses motivations, ses secrets. Ce texte peut être aussi long que nécessaire — la fiche scrollera élégamment.",
+    personality: ["Loyal", "Impulsif", "Sarcastique"],
     tropes: ["Found Family", "Morally Grey", "Reluctant Hero"],
-    traits: ["Trait 1", "Trait 2", "Trait 3"],
+    facts: ["Dort toujours avec la lumière allumée", "Collectionne les couteaux", "Ne supporte pas le silence"],
+    locations: ["Le bar du quartier nord", "La bibliothèque municipale", "Les toits de la ville"],
     links: [
       { name: "Autre Personnage", relation: "Allié de circonstance" }
     ],
+    pnj_links: [
+      { name: "Mère du personnage", relation: "Famille — contact rare" },
+      { name: "Le barman", relation: "Informateur" }
+    ],
     accent: "#c2860e",
-    img: "https://i.pinimg.com/1200x/48/b7/13/48b713345b7e2bfc4a94a9e59eb0df24.jpg"
+    img: "https://imgur.com/a/JQzrMvN"
   },
   {
     id: 2,
@@ -308,10 +320,15 @@ const CHARACTERS = [
     genre: "tranche_de_vie",
     quote: "« Citation du personnage. »",
     bio: "Background du personnage. Remplacez ce texte par votre propre contenu.",
+    personality: ["Calme", "Observateur", "Têtu"],
     tropes: ["Slow Burn", "Hurt/Comfort"],
-    traits: ["Trait 1", "Trait 2", "Trait 3"],
+    facts: ["Fact 1", "Fact 2"],
+    locations: ["Lieu 1", "Lieu 2"],
     links: [
       { name: "Autre Personnage", relation: "Meilleur ami" }
+    ],
+    pnj_links: [
+      { name: "PNJ exemple", relation: "Relation" }
     ],
     accent: "#cf22e7",
     img: null
@@ -326,9 +343,12 @@ const CHARACTERS = [
     genre: "sci-fi",
     quote: "« Citation du personnage. »",
     bio: "Background du personnage.",
+    personality: ["Curieux", "Naïf"],
     tropes: ["Fish Out of Water", "Android Dreams"],
-    traits: ["Trait 1", "Trait 2"],
+    facts: ["Fact 1"],
+    locations: ["Lieu 1"],
     links: [],
+    pnj_links: [],
     accent: "#b8942a",
     img: null
   },
@@ -342,11 +362,14 @@ const CHARACTERS = [
     genre: "horreur",
     quote: "« Citation du personnage. »",
     bio: "Background du personnage.",
+    personality: ["Méfiant", "Intelligent", "Froid"],
     tropes: ["Final Girl", "Unreliable Narrator", "Body Horror"],
-    traits: ["Trait 1", "Trait 2", "Trait 3"],
+    facts: ["Fact 1", "Fact 2"],
+    locations: ["Lieu 1", "Lieu 2"],
     links: [
       { name: "Personnage 2", relation: "Rival" }
     ],
+    pnj_links: [],
     accent: "#a01bb8",
     img: null
   },
@@ -360,9 +383,12 @@ const CHARACTERS = [
     genre: "romance",
     quote: "« Citation du personnage. »",
     bio: "Background du personnage.",
+    personality: ["Doux", "Rêveur"],
     tropes: ["Enemies to Lovers", "Touch Starved"],
-    traits: ["Trait 1", "Trait 2"],
+    facts: ["Fact 1"],
+    locations: ["Lieu 1"],
     links: [],
+    pnj_links: [],
     accent: "#daa520",
     img: null
   },
@@ -376,10 +402,15 @@ const CHARACTERS = [
     genre: "historique",
     quote: "« Citation du personnage. »",
     bio: "Background du personnage.",
+    personality: ["Noble", "Tourmenté", "Stratège"],
     tropes: ["Noble Fugitive", "Star-Crossed", "War Changes People"],
-    traits: ["Trait 1", "Trait 2", "Trait 3"],
+    facts: ["Fact 1", "Fact 2", "Fact 3"],
+    locations: ["Lieu 1", "Lieu 2"],
     links: [
       { name: "Personnage 3", relation: "Ennemi juré" }
+    ],
+    pnj_links: [
+      { name: "Son écuyer", relation: "Fidèle serviteur" }
     ],
     accent: "#cf22e7",
     img: null
@@ -401,7 +432,7 @@ const GENRE_ICONS = Object.fromEntries(GENRES.filter(g => g.icon).map(g => [g.ke
 /* ── Particles ── */
 (function initMotes() {
   const container = document.getElementById("motes");
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 90; i++) {
     const isViolet = i % 3 === 0;
     const size = 1 + Math.random() * 3;
     const m = document.createElement("div");
@@ -414,6 +445,26 @@ const GENRE_ICONS = Object.fromEntries(GENRES.filter(g => g.icon).map(g => [g.ke
     m.style.setProperty("--mo", (0.08 + Math.random() * 0.25).toString());
     m.style.boxShadow = `0 0 ${size * 3}px ${isViolet ? "#cf22e766" : "#daa52066"}`;
     container.appendChild(m);
+  }
+  /* Floating esoteric symbols */
+  const symbols = ["☽", "☾", "✦", "✧", "☼", "◯", "⟡", "✶"];
+  for (let i = 0; i < 10; i++) {
+    const isViolet = i % 2 === 0;
+    const s = document.createElement("div");
+    s.textContent = symbols[i % symbols.length];
+    s.style.position = "absolute";
+    s.style.left = (Math.random() * 100) + "%";
+    s.style.bottom = "-20px";
+    s.style.fontSize = (10 + Math.random() * 14) + "px";
+    s.style.color = isViolet ? "#cf22e7" : "#daa520";
+    s.style.opacity = "0";
+    s.style.pointerEvents = "none";
+    s.style.setProperty("--dur", (18 + Math.random() * 25) + "s");
+    s.style.setProperty("--delay", (Math.random() * 20) + "s");
+    s.style.setProperty("--mo", (0.06 + Math.random() * 0.12).toString());
+    s.style.animation = "moteRise var(--dur) var(--delay) linear infinite";
+    s.style.filter = `drop-shadow(0 0 6px ${isViolet ? "#cf22e744" : "#daa52044"})`;
+    container.appendChild(s);
   }
 })();
 
@@ -471,6 +522,7 @@ function renderGrid() {
         </div>
         <p class="card-quote">${char.quote}</p>
         <div class="card-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}33, transparent)"></div>
+        <div style="text-align:center; font-size:10px; letter-spacing:8px; color:${char.accent}33; margin-top:6px;">☽ ✧ ☾</div>
         <div class="card-meta">
           <span>${char.age} ans</span>
           <span>${char.job}</span>
@@ -522,6 +574,11 @@ function openModal(char) {
     <div class="modal-body">
       <blockquote class="modal-quote" style="border-left: 2px solid ${char.accent}88">${char.quote}</blockquote>
 
+      <div class="modal-section-label">Personnalité</div>
+      <div class="modal-traits" style="margin-bottom:32px">
+        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
+      </div>
+
       <div class="modal-section-label">Tropes</div>
       <div class="modal-tropes">
         ${char.tropes.map(t => `<span class="modal-trope" style="color:${char.accent}; border:1px solid ${char.accent}33; background:${char.accent}0a">${t}</span>`).join("")}
@@ -536,24 +593,56 @@ function openModal(char) {
         `).join("")}
       </div>
 
-      <div class="modal-section-label">Traits de caractère</div>
-      <div class="modal-traits">
-        ${char.traits.map(t => `<span class="modal-trait">${t}</span>`).join("")}
-      </div>
-
       <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
+      <div style="text-align:center; font-size:13px; letter-spacing:12px; color:${char.accent}30; margin:-28px 0 20px;">✦ ☽ ☼ ☾ ✦</div>
 
       <div class="modal-section-label" style="margin-bottom:16px">Biographie</div>
       <div class="modal-bio">${char.bio}</div>
 
+      ${char.facts.length > 0 ? `
+        <div class="modal-section-label" style="margin-bottom:12px">☽ Facts</div>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:36px">
+          ${char.facts.map(f => `
+            <div style="display:flex; align-items:baseline; gap:10px; padding:8px 14px; background:#f8f2e6; border:1px solid #e8dcc8;">
+              <span style="color:${char.accent}; font-size:10px;">✧</span>
+              <span style="font-size:14px; color:#5a4a30; line-height:1.6">${f}</span>
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
+
+      ${char.locations.length > 0 ? `
+        <div class="modal-section-label" style="margin-bottom:12px">☼ Où le croiser</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:36px">
+          ${char.locations.map(l => `
+            <span style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#7a6840; padding:7px 16px; background:#f8f2e6; border:1px solid #e0d4bc;">⟡ ${l}</span>
+          `).join("")}
+        </div>
+      ` : ""}
+
       ${char.links.length > 0 ? `
-        <div class="modal-section-label" style="margin-bottom:16px">Liens</div>
-        <div style="display:flex; flex-direction:column; gap:8px">
+        <div class="modal-section-label" style="margin-bottom:16px">Liens PJ</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:${char.pnj_links.length > 0 ? '36' : '0'}px">
           ${char.links.map(lk => `
             <div class="modal-link">
               <span class="modal-link-icon" style="color:${char.accent}">◈</span>
               <div>
                 <div class="modal-link-name">${lk.name}</div>
+                <div class="modal-link-rel">${lk.relation}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
+
+      ${char.pnj_links.length > 0 ? `
+        <div class="modal-section-label" style="margin-bottom:16px">Liens PNJ</div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          ${char.pnj_links.map(lk => `
+            <div class="modal-link" style="border-left:3px solid ${char.accent}44">
+              <span class="modal-link-icon" style="color:${char.accent}; opacity:0.6">☾</span>
+              <div>
+                <div class="modal-link-name" style="color:#6a5a3a">${lk.name}</div>
                 <div class="modal-link-rel">${lk.relation}</div>
               </div>
             </div>
