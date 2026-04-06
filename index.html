@@ -217,7 +217,7 @@ header { text-align: center; padding: 80px 20px 50px; }
   padding: 7px 16px; font-weight: 600;
 }
 .modal-stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(3px, 1fr));
   gap: 1px; background: #e8dcc8; border: 1px solid #e8dcc8; margin-bottom: 36px;
 }
 .modal-stat { background: #fefcf5; padding: 16px 20px; }
@@ -293,8 +293,9 @@ const CHARACTERS = [
     alias: "Chef Kang ✦ Woo",
     faceclaim: "Wonho ✦ Soliste",
     astro: "Poisson",
+    birth: "15 mars 1994, 32 ans",
     natio: "Coréen",
-    mbti: "dftg",
+    mbti: "ESFJ",
     sexuality: "Bisexuel",
     age: 32,
     job: "Chef pâtissier",
@@ -562,11 +563,11 @@ function openModal(char) {
   inner.style.boxShadow = `0 40px 100px rgba(60,40,10,0.4), 0 0 80px ${char.accent}15`;
 
   const statsData = [
-    { label: "Âge", value: char.age + " ans" },
-    { label: "Métier", value: char.job },
+    { label: "Date de naissance", value: char.birth },
     { label: "Astrologie", value: char.astro },
-    { label: "MBTI", value: char.mbti },
     { label: "Nationnalité", value: char.natio },
+    { label: "Métier", value: char.job },
+    { label: "MBTI", value: char.mbti },
     { label: "Orientation sexuelle", value: char.sexuality }
   ];
 
