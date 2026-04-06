@@ -1,15 +1,284 @@
-import { useState, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginary Friends</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #faf6ed; color: #3c2e18; min-height: 100vh; font-family: 'Cormorant Garamond', serif; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f5efe4; }
+::-webkit-scrollbar-thumb { background: #d8cbb0; }
+::-webkit-scrollbar-thumb:hover { background: #c2a878; }
 
-const GENRES = [
-  { key: "all", label: "Tous" },
-  { key: "fantastique", label: "Fantastique" },
-  { key: "tranche_de_vie", label: "Tranche de vie" },
-  { key: "sci-fi", label: "Sci-Fi" },
-  { key: "horreur", label: "Horreur" },
-  { key: "romance", label: "Romance" },
-  { key: "historique", label: "Historique" },
-];
+/* ── Grain ── */
+#grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.035;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
 
+/* ── Particles ── */
+#motes { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.mote {
+  position: absolute; bottom: -10px; border-radius: 50%;
+  animation: moteRise var(--dur) var(--delay) linear infinite;
+}
+.mote.gold { background: radial-gradient(circle, #daa520, #c2860e); }
+.mote.violet { background: radial-gradient(circle, #cf22e7, #a01bb8); }
+
+@keyframes moteRise {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: var(--mo); }
+  90% { opacity: var(--mo); }
+  100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes headerGlow {
+  0%, 100% { text-shadow: 0 0 30px rgba(194,134,14,0.2), 0 0 60px rgba(207,34,231,0.1); }
+  50% { text-shadow: 0 0 60px rgba(194,134,14,0.35), 0 0 100px rgba(207,34,231,0.2); }
+}
+@keyframes lineExpand { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Layout ── */
+.page { min-height: 100vh; position: relative; z-index: 2; }
+
+header { text-align: center; padding: 80px 20px 50px; }
+.header-sub {
+  font-size: 9px; letter-spacing: 8px; text-transform: uppercase;
+  color: #b8a070; margin-bottom: 20px; animation: fadeIn 1s 0.2s both; font-weight: 600;
+}
+.header-title {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(38px, 7vw, 76px); color: #2c1e0a; letter-spacing: 4px;
+  animation: headerGlow 5s ease-in-out infinite, fadeIn 1s both; margin-bottom: 16px;
+}
+.header-desc {
+  font-size: 14px; color: #9a8a6a; font-style: italic;
+  max-width: 480px; margin: 0 auto 30px; line-height: 1.8; animation: fadeIn 1s 0.4s both;
+}
+.header-line {
+  width: 200px; height: 1px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, #c2860e55, #a01bb844, transparent);
+  animation: lineExpand 1s 0.6s both;
+}
+
+/* ── Filters ── */
+.filters {
+  display: flex; justify-content: center; gap: 4px;
+  padding: 0 20px 50px; flex-wrap: wrap; animation: fadeIn 1s 0.8s both;
+}
+.filter-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+  color: #a09070; background: transparent; border: 1px solid transparent;
+  padding: 8px 18px; cursor: pointer; transition: all 0.3s;
+}
+.filter-btn.active {
+  color: #2c1e0a;
+  background: linear-gradient(135deg, #c2860e12, #a01bb812);
+  border-color: #c2860e33;
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 24px; padding: 0 40px 80px; max-width: 1220px; margin: 0 auto;
+}
+.empty-msg {
+  text-align: center; padding: 60px 20px;
+  color: #b8a070; font-style: italic; font-size: 14px;
+}
+
+/* ── Card ── */
+.card {
+  position: relative; cursor: pointer; border-radius: 2px; overflow: hidden;
+  border: 1px solid #e8dcc8; transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 2px 16px rgba(120,90,40,0.07);
+  animation: fadeSlideIn 0.6s both;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card-img {
+  width: 100%; height: 270px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-img-fade {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
+  background: linear-gradient(transparent, #fefcf5);
+}
+.card-initial {
+  font-size: 72px; opacity: 0.08; font-family: 'UnifrakturMaguntia', cursive;
+}
+.card-genre {
+  position: absolute; top: 14px; left: 14px;
+  font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+  background: #fefcf5ee; padding: 5px 12px;
+  font-family: 'Cormorant Garamond', serif; font-weight: 600;
+}
+.card-body { padding: 20px 24px 24px; }
+.card-name {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 23px; color: #2c1e0a; margin: 0 0 3px; letter-spacing: 1px;
+}
+.card-alias {
+  font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase;
+  margin-bottom: 14px; font-weight: 600;
+}
+.card-tropes { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.card-trope {
+  font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #8a7040; padding: 4px 10px;
+}
+.card-quote {
+  font-size: 14px; color: #8a7a60; font-style: italic; line-height: 1.6; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-divider { margin-top: 16px; height: 1px; }
+.card-meta {
+  margin-top: 12px; display: flex; justify-content: space-between;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #a09070;
+}
+.card-glow {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  transform: scaleX(0); transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+  transform-origin: center;
+}
+.card:hover .card-glow { transform: scaleX(1); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(40,30,15,0); backdrop-filter: blur(0px);
+  transition: all 0.4s ease;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 20px; overflow-y: auto;
+}
+.modal-overlay.visible {
+  background: rgba(40,30,15,0.8); backdrop-filter: blur(10px);
+}
+.modal-content {
+  width: 100%; max-width: 820px;
+  background: linear-gradient(180deg, #fefcf5 0%, #faf6ed 100%);
+  border-radius: 2px; overflow: hidden; position: relative;
+  transform: translateY(30px) scale(0.97); opacity: 0;
+  transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.modal-overlay.visible .modal-content {
+  transform: translateY(0) scale(1); opacity: 1;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 16px; z-index: 10;
+  background: #fefcf5dd; border: 1px solid #d8cbb0;
+  color: #8a7a60; width: 36px; height: 36px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+}
+.modal-hero {
+  position: relative; height: 300px;
+  display: flex; align-items: flex-end; padding: 40px;
+}
+.modal-hero-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(transparent 30%, #fefcf5 100%);
+}
+.modal-hero-info { position: relative; z-index: 2; }
+.modal-genre {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 8px; font-weight: 600;
+}
+.modal-name {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(32px, 5vw, 48px); color: #2c1e0a;
+  margin: 0 0 6px; letter-spacing: 2px;
+}
+.modal-fc {
+  font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;
+}
+.modal-body { padding: 40px; }
+.modal-quote {
+  font-size: 18px; font-style: italic; color: #8a7a60;
+  padding-left: 20px; margin: 0 0 36px; line-height: 1.8;
+}
+.modal-section-label {
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  color: #a09070; margin-bottom: 12px; font-weight: 600;
+}
+.modal-tropes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.modal-trope {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 7px 16px; font-weight: 600;
+}
+.modal-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px; background: #e8dcc8; border: 1px solid #e8dcc8; margin-bottom: 36px;
+}
+.modal-stat { background: #fefcf5; padding: 16px 20px; }
+.modal-stat-label {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 6px; font-weight: 600;
+}
+.modal-stat-value { font-size: 15px; color: #3c2e18; }
+.modal-traits { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+.modal-trait {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: #7a6840; border: 1px solid #e0d4bc; padding: 6px 14px; background: #f8f2e6;
+}
+.modal-divider { height: 1px; margin: 0 0 36px; }
+.modal-bio { font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; }
+.modal-link {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; background: #f8f2e6; border: 1px solid #e8dcc8;
+}
+.modal-link-icon { font-size: 14px; width: 20px; text-align: center; }
+.modal-link-name { font-size: 15px; color: #3c2e18; }
+.modal-link-rel {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #a09070;
+}
+
+footer {
+  text-align: center; padding: 40px 20px 60px; border-top: 1px solid #e8dcc8;
+}
+.footer-text {
+  font-size: 9px; letter-spacing: 6px; text-transform: uppercase; color: #c8b890;
+}
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+<div id="motes"></div>
+
+<div class="page">
+  <header>
+    <div class="header-sub">Galerie de Personnages</div>
+    <h1 class="header-title">Imaginary Friends</h1>
+    <p class="header-desc">Cliquez sur une carte pour découvrir l'histoire complète du personnage.</p>
+    <div class="header-line"></div>
+  </header>
+
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-msg" id="empty" style="display:none;">Aucun personnage dans ce genre pour le moment.</div>
+
+  <footer><div class="footer-text">Roleplay Character Showcase</div></footer>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-content" id="modal-inner"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA — Modifiez vos personnages ici !
+   ═══════════════════════════════════════════ */
 const CHARACTERS = [
   {
     id: 1,
@@ -24,10 +293,10 @@ const CHARACTERS = [
     tropes: ["Found Family", "Morally Grey", "Reluctant Hero"],
     traits: ["Trait 1", "Trait 2", "Trait 3"],
     links: [
-      { name: "Autre Personnage", relation: "Allié de circonstance" },
+      { name: "Autre Personnage", relation: "Allié de circonstance" }
     ],
     accent: "#c2860e",
-    img: null,
+    img: null
   },
   {
     id: 2,
@@ -42,10 +311,10 @@ const CHARACTERS = [
     tropes: ["Slow Burn", "Hurt/Comfort"],
     traits: ["Trait 1", "Trait 2", "Trait 3"],
     links: [
-      { name: "Autre Personnage", relation: "Meilleur ami" },
+      { name: "Autre Personnage", relation: "Meilleur ami" }
     ],
     accent: "#cf22e7",
-    img: null,
+    img: null
   },
   {
     id: 3,
@@ -61,7 +330,7 @@ const CHARACTERS = [
     traits: ["Trait 1", "Trait 2"],
     links: [],
     accent: "#b8942a",
-    img: null,
+    img: null
   },
   {
     id: 4,
@@ -76,10 +345,10 @@ const CHARACTERS = [
     tropes: ["Final Girl", "Unreliable Narrator", "Body Horror"],
     traits: ["Trait 1", "Trait 2", "Trait 3"],
     links: [
-      { name: "Personnage 2", relation: "Rival" },
+      { name: "Personnage 2", relation: "Rival" }
     ],
     accent: "#a01bb8",
-    img: null,
+    img: null
   },
   {
     id: 5,
@@ -95,7 +364,7 @@ const CHARACTERS = [
     traits: ["Trait 1", "Trait 2"],
     links: [],
     accent: "#daa520",
-    img: null,
+    img: null
   },
   {
     id: 6,
@@ -110,429 +379,218 @@ const CHARACTERS = [
     tropes: ["Noble Fugitive", "Star-Crossed", "War Changes People"],
     traits: ["Trait 1", "Trait 2", "Trait 3"],
     links: [
-      { name: "Personnage 3", relation: "Ennemi juré" },
+      { name: "Personnage 3", relation: "Ennemi juré" }
     ],
     accent: "#cf22e7",
-    img: null,
-  },
+    img: null
+  }
 ];
 
-const GENRE_ICONS = {
-  fantastique: "✦",
-  tranche_de_vie: "◎",
-  "sci-fi": "⬡",
-  horreur: "☾",
-  romance: "❋",
-  historique: "⚜",
-};
+const GENRES = [
+  { key: "all", label: "Tous", icon: "" },
+  { key: "fantastique", label: "Fantastique", icon: "✦" },
+  { key: "tranche_de_vie", label: "Tranche de vie", icon: "◎" },
+  { key: "sci-fi", label: "Sci-Fi", icon: "⬡" },
+  { key: "horreur", label: "Horreur", icon: "☾" },
+  { key: "romance", label: "Romance", icon: "❋" },
+  { key: "historique", label: "Historique", icon: "⚜" }
+];
 
-function GrainOverlay() {
-  return (
-    <div style={{
-      position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9999, opacity: 0.035,
-      background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      backgroundSize: "128px 128px",
-    }} />
-  );
-}
+const GENRE_ICONS = Object.fromEntries(GENRES.filter(g => g.icon).map(g => [g.key, g.icon]));
 
-function GoldenMotes() {
-  const motes = Array.from({ length: 30 }, (_, i) => {
+/* ── Particles ── */
+(function initMotes() {
+  const container = document.getElementById("motes");
+  for (let i = 0; i < 30; i++) {
     const isViolet = i % 3 === 0;
-    return {
-      id: i, left: Math.random() * 100, delay: Math.random() * 18,
-      dur: 12 + Math.random() * 20, size: 1 + Math.random() * 3,
-      o: 0.08 + Math.random() * 0.25, isViolet,
-    };
+    const size = 1 + Math.random() * 3;
+    const m = document.createElement("div");
+    m.className = "mote " + (isViolet ? "violet" : "gold");
+    m.style.left = (Math.random() * 100) + "%";
+    m.style.width = size + "px";
+    m.style.height = size + "px";
+    m.style.setProperty("--dur", (12 + Math.random() * 20) + "s");
+    m.style.setProperty("--delay", (Math.random() * 18) + "s");
+    m.style.setProperty("--mo", (0.08 + Math.random() * 0.25).toString());
+    m.style.boxShadow = `0 0 ${size * 3}px ${isViolet ? "#cf22e766" : "#daa52066"}`;
+    container.appendChild(m);
+  }
+})();
+
+/* ── State ── */
+let currentFilter = "all";
+
+/* ── Filters ── */
+(function initFilters() {
+  const container = document.getElementById("filters");
+  GENRES.forEach(g => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (g.key === "all" ? " active" : "");
+    btn.dataset.key = g.key;
+    btn.textContent = (g.icon ? g.icon + " " : "") + g.label;
+    btn.addEventListener("click", () => {
+      currentFilter = g.key;
+      container.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderGrid();
+    });
+    container.appendChild(btn);
   });
-  return (
-    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
-      {motes.map(m => (
-        <div key={m.id} style={{
-          position: "absolute", left: `${m.left}%`, bottom: "-10px",
-          width: `${m.size}px`, height: `${m.size}px`, borderRadius: "50%",
-          background: m.isViolet
-            ? "radial-gradient(circle, #cf22e7, #a01bb8)"
-            : "radial-gradient(circle, #daa520, #c2860e)",
-          opacity: m.o, animation: `moteRise ${m.dur}s ${m.delay}s linear infinite`,
-          boxShadow: m.isViolet
-            ? `0 0 ${m.size * 3}px #cf22e766`
-            : `0 0 ${m.size * 3}px #daa52066`,
-        }} />
-      ))}
-    </div>
-  );
-}
+})();
 
-function CharCard({ char, onClick, index }) {
-  const [hov, setHov] = useState(false);
-  const icon = GENRE_ICONS[char.genre] || "✦";
-  return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{
-        position: "relative", cursor: "pointer",
-        background: hov
-          ? `linear-gradient(168deg, ${char.accent}14 0%, #fffdf7 40%, #fefcf5 100%)`
-          : `linear-gradient(168deg, ${char.accent}0a 0%, #fefcf5 40%, #faf6ed 100%)`,
-        border: `1px solid ${hov ? char.accent + "55" : "#e8dcc8"}`,
-        borderRadius: "2px", overflow: "hidden",
-        transition: "all 0.5s cubic-bezier(0.23,1,0.32,1)",
-        transform: hov ? "translateY(-5px)" : "translateY(0)",
-        boxShadow: hov
-          ? `0 24px 60px ${char.accent}18, 0 0 0 1px ${char.accent}22`
-          : "0 2px 16px rgba(120,90,40,0.07)",
-        animation: `fadeSlideIn 0.6s ${index * 0.1}s both`, opacity: 0,
-      }}>
-      <div style={{
-        width: "100%", height: "270px", position: "relative", overflow: "hidden",
-        background: char.img ? `url(${char.img}) center/cover`
-          : `linear-gradient(170deg, ${char.accent}20 0%, #f5efe4 50%, ${char.accent}10 100%)`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-      }}>
-        {!char.img && <span style={{
-          fontSize: "72px", opacity: 0.08, fontFamily: "'UnifrakturMaguntia', cursive", color: char.accent,
-        }}>{char.name[0]}</span>}
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: "100px",
-          background: "linear-gradient(transparent, #fefcf5)",
-        }} />
-        <div style={{
-          position: "absolute", top: "14px", left: "14px",
-          fontSize: "9px", letterSpacing: "2.5px", textTransform: "uppercase",
-          color: char.accent, background: "#fefcf5ee",
-          padding: "5px 12px", border: `1px solid ${char.accent}33`,
-          fontFamily: "'Cormorant Garamond', serif", fontWeight: 600,
-        }}>{icon} {char.genre.replace("_", " ")}</div>
+/* ── Grid ── */
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  grid.innerHTML = "";
+  const filtered = currentFilter === "all"
+    ? CHARACTERS
+    : CHARACTERS.filter(c => c.genre === currentFilter);
+
+  empty.style.display = filtered.length === 0 ? "block" : "none";
+
+  filtered.forEach((char, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = (i * 0.1) + "s";
+    card.style.background = `linear-gradient(168deg, ${char.accent}0a 0%, #fefcf5 40%, #faf6ed 100%)`;
+
+    const icon = GENRE_ICONS[char.genre] || "✦";
+
+    card.innerHTML = `
+      <div class="card-img" style="background: ${char.img ? `url(${char.img}) center/cover` : `linear-gradient(170deg, ${char.accent}20 0%, #f5efe4 50%, ${char.accent}10 100%)`}">
+        ${!char.img ? `<span class="card-initial" style="color:${char.accent}">${char.name[0]}</span>` : ""}
+        <div class="card-img-fade"></div>
+        <div class="card-genre" style="color:${char.accent}; border: 1px solid ${char.accent}33">${icon} ${char.genre.replace("_", " ")}</div>
       </div>
-      <div style={{ padding: "20px 24px 24px" }}>
-        <h3 style={{
-          fontFamily: "'UnifrakturMaguntia', cursive",
-          fontSize: "23px", color: "#2c1e0a", margin: "0 0 3px", letterSpacing: "1px",
-        }}>{char.name}</h3>
-        <div style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "12px", color: char.accent, letterSpacing: "2.5px",
-          textTransform: "uppercase", marginBottom: "14px", fontWeight: 600,
-        }}>{char.alias}</div>
-        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "14px" }}>
-          {char.tropes.map(t => (
-            <span key={t} style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "10.5px", letterSpacing: "1.5px", textTransform: "uppercase",
-              color: "#8a7040", background: `${char.accent}12`,
-              border: `1px solid ${char.accent}22`, padding: "4px 10px",
-            }}>{t}</span>
-          ))}
+      <div class="card-body">
+        <h3 class="card-name">${char.name}</h3>
+        <div class="card-alias" style="color:${char.accent}">${char.alias}</div>
+        <div class="card-tropes">
+          ${char.tropes.map(t => `<span class="card-trope" style="background:${char.accent}12; border:1px solid ${char.accent}22">${t}</span>`).join("")}
         </div>
-        <p style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "14px", color: "#8a7a60", fontStyle: "italic",
-          lineHeight: "1.6", margin: 0,
-          display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
-        }}>{char.quote}</p>
-        <div style={{
-          marginTop: "16px", height: "1px",
-          background: `linear-gradient(90deg, transparent, ${char.accent}33, transparent)`,
-        }} />
-        <div style={{
-          marginTop: "12px", display: "flex", justifyContent: "space-between",
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "#a09070",
-        }}>
-          <span>{char.age} ans</span>
-          <span>{char.job}</span>
+        <p class="card-quote">${char.quote}</p>
+        <div class="card-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}33, transparent)"></div>
+        <div class="card-meta">
+          <span>${char.age} ans</span>
+          <span>${char.job}</span>
         </div>
       </div>
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: "2px",
-        background: `linear-gradient(90deg, transparent, ${char.accent}, transparent)`,
-        transform: hov ? "scaleX(1)" : "scaleX(0)",
-        transition: "transform 0.5s cubic-bezier(0.23,1,0.32,1)", transformOrigin: "center",
-      }} />
-    </div>
-  );
+      <div class="card-glow" style="background:linear-gradient(90deg, transparent, ${char.accent}, transparent)"></div>
+    `;
+
+    card.addEventListener("mouseenter", () => {
+      card.style.background = `linear-gradient(168deg, ${char.accent}14 0%, #fffdf7 40%, #fefcf5 100%)`;
+      card.style.borderColor = char.accent + "55";
+      card.style.boxShadow = `0 24px 60px ${char.accent}18, 0 0 0 1px ${char.accent}22`;
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.background = `linear-gradient(168deg, ${char.accent}0a 0%, #fefcf5 40%, #faf6ed 100%)`;
+      card.style.borderColor = "#e8dcc8";
+      card.style.boxShadow = "0 2px 16px rgba(120,90,40,0.07)";
+    });
+    card.addEventListener("click", () => openModal(char));
+    grid.appendChild(card);
+  });
 }
 
-function CharModal({ char, onClose }) {
-  const [vis, setVis] = useState(false);
+/* ── Modal ── */
+function openModal(char) {
+  const overlay = document.getElementById("modal");
+  const inner = document.getElementById("modal-inner");
   const icon = GENRE_ICONS[char.genre] || "✦";
-  useEffect(() => {
-    requestAnimationFrame(() => setVis(true));
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-  const close = () => { setVis(false); setTimeout(onClose, 400); };
 
-  return (
-    <div onClick={close} style={{
-      position: "fixed", inset: 0, zIndex: 1000,
-      background: vis ? "rgba(40,30,15,0.8)" : "rgba(40,30,15,0)",
-      backdropFilter: vis ? "blur(10px)" : "blur(0px)",
-      transition: "all 0.4s ease",
-      display: "flex", alignItems: "flex-start", justifyContent: "center",
-      padding: "40px 20px", overflowY: "auto",
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        width: "100%", maxWidth: "820px",
-        background: "linear-gradient(180deg, #fefcf5 0%, #faf6ed 100%)",
-        border: `1px solid ${char.accent}33`, borderRadius: "2px", overflow: "hidden",
-        transform: vis ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
-        opacity: vis ? 1 : 0,
-        transition: "all 0.5s cubic-bezier(0.23,1,0.32,1)",
-        boxShadow: `0 40px 100px rgba(60,40,10,0.4), 0 0 80px ${char.accent}15`,
-        position: "relative",
-      }}>
-        <button onClick={close} style={{
-          position: "absolute", top: "16px", right: "16px", zIndex: 10,
-          background: "#fefcf5dd", border: "1px solid #d8cbb0",
-          color: "#8a7a60", width: "36px", height: "36px", cursor: "pointer",
-          fontFamily: "'Cormorant Garamond', serif", fontSize: "16px",
-          display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.3s",
-        }}
-          onMouseEnter={e => { e.target.style.borderColor = char.accent; e.target.style.color = char.accent; }}
-          onMouseLeave={e => { e.target.style.borderColor = "#d8cbb0"; e.target.style.color = "#8a7a60"; }}
-        >✕</button>
+  inner.style.border = `1px solid ${char.accent}33`;
+  inner.style.boxShadow = `0 40px 100px rgba(60,40,10,0.4), 0 0 80px ${char.accent}15`;
 
-        <div style={{
-          position: "relative", height: "300px",
-          background: char.img ? `url(${char.img}) center/cover`
-            : `linear-gradient(170deg, ${char.accent}28 0%, #f5efe4 40%, ${char.accent}12 100%)`,
-          display: "flex", alignItems: "flex-end", padding: "40px",
-        }}>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(transparent 30%, #fefcf5 100%)" }} />
-          <div style={{ position: "relative", zIndex: 2 }}>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase",
-              color: char.accent, marginBottom: "8px", fontWeight: 600,
-            }}>{icon} {char.genre.replace("_", " ")}</div>
-            <h1 style={{
-              fontFamily: "'UnifrakturMaguntia', cursive",
-              fontSize: "clamp(32px, 5vw, 48px)", color: "#2c1e0a",
-              margin: "0 0 6px", letterSpacing: "2px",
-            }}>{char.name}</h1>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "13px", letterSpacing: "3px", textTransform: "uppercase",
-              color: char.accent, fontWeight: 600,
-            }}>{char.alias} — fc. {char.faceclaim}</div>
+  const statsData = [
+    { label: "Âge", value: char.age + " ans" },
+    { label: "Métier", value: char.job },
+    { label: "Faceclaim", value: char.faceclaim }
+  ];
+
+  inner.innerHTML = `
+    <button class="modal-close" id="modal-close-btn">✕</button>
+    <div class="modal-hero" style="background: ${char.img ? `url(${char.img}) center/cover` : `linear-gradient(170deg, ${char.accent}28 0%, #f5efe4 40%, ${char.accent}12 100%)`}">
+      <div class="modal-hero-fade"></div>
+      <div class="modal-hero-info">
+        <div class="modal-genre" style="color:${char.accent}">${icon} ${char.genre.replace("_", " ")}</div>
+        <h1 class="modal-name">${char.name}</h1>
+        <div class="modal-fc" style="color:${char.accent}">${char.alias} — fc. ${char.faceclaim}</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <blockquote class="modal-quote" style="border-left: 2px solid ${char.accent}88">${char.quote}</blockquote>
+
+      <div class="modal-section-label">Tropes</div>
+      <div class="modal-tropes">
+        ${char.tropes.map(t => `<span class="modal-trope" style="color:${char.accent}; border:1px solid ${char.accent}33; background:${char.accent}0a">${t}</span>`).join("")}
+      </div>
+
+      <div class="modal-stats">
+        ${statsData.map(s => `
+          <div class="modal-stat">
+            <div class="modal-stat-label" style="color:${char.accent}">${s.label}</div>
+            <div class="modal-stat-value">${s.value}</div>
           </div>
-        </div>
+        `).join("")}
+      </div>
 
-        <div style={{ padding: "40px" }}>
-          <blockquote style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "18px", fontStyle: "italic", color: "#8a7a60",
-            borderLeft: `2px solid ${char.accent}88`, paddingLeft: "20px",
-            margin: "0 0 36px", lineHeight: "1.8",
-          }}>{char.quote}</blockquote>
+      <div class="modal-section-label">Traits de caractère</div>
+      <div class="modal-traits">
+        ${char.traits.map(t => `<span class="modal-trait">${t}</span>`).join("")}
+      </div>
 
-          <div style={{ marginBottom: "32px" }}>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase",
-              color: "#a09070", marginBottom: "12px", fontWeight: 600,
-            }}>Tropes</div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              {char.tropes.map(t => (
-                <span key={t} style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase",
-                  color: char.accent, border: `1px solid ${char.accent}33`,
-                  padding: "7px 16px", background: `${char.accent}0a`, fontWeight: 600,
-                }}>{t}</span>
-              ))}
-            </div>
-          </div>
+      <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
 
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-            gap: "1px", background: "#e8dcc8", border: "1px solid #e8dcc8", marginBottom: "36px",
-          }}>
-            {[
-              { label: "Âge", value: `${char.age} ans` },
-              { label: "Métier", value: char.job },
-              { label: "Faceclaim", value: char.faceclaim },
-            ].map(s => (
-              <div key={s.label} style={{ background: "#fefcf5", padding: "16px 20px" }}>
-                <div style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase",
-                  color: char.accent, marginBottom: "6px", fontWeight: 600,
-                }}>{s.label}</div>
-                <div style={{
-                  fontFamily: "'Cormorant Garamond', serif", fontSize: "15px", color: "#3c2e18",
-                }}>{s.value}</div>
-              </div>
-            ))}
-          </div>
+      <div class="modal-section-label" style="margin-bottom:16px">Biographie</div>
+      <div class="modal-bio">${char.bio}</div>
 
-          <div style={{ marginBottom: "36px" }}>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase",
-              color: "#a09070", marginBottom: "12px", fontWeight: 600,
-            }}>Traits de caractère</div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              {char.traits.map(t => (
-                <span key={t} style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase",
-                  color: "#7a6840", border: "1px solid #e0d4bc",
-                  padding: "6px 14px", background: "#f8f2e6",
-                }}>{t}</span>
-              ))}
-            </div>
-          </div>
-
-          <div style={{
-            height: "1px", margin: "0 0 36px",
-            background: `linear-gradient(90deg, transparent, ${char.accent}44, transparent)`,
-          }} />
-
-          <div style={{ marginBottom: "36px" }}>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase",
-              color: "#a09070", marginBottom: "16px", fontWeight: 600,
-            }}>Biographie</div>
-            <div style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "16px", lineHeight: "2", color: "#5a4a30",
-            }}>{char.bio}</div>
-          </div>
-
-          {char.links.length > 0 && (
-            <div>
-              <div style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase",
-                color: "#a09070", marginBottom: "16px", fontWeight: 600,
-              }}>Liens</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                {char.links.map((lk, i) => (
-                  <div key={i} style={{
-                    display: "flex", alignItems: "center", gap: "14px",
-                    padding: "14px 18px", background: "#f8f2e6", border: "1px solid #e8dcc8",
-                  }}>
-                    <span style={{ fontSize: "14px", color: char.accent, width: "20px", textAlign: "center" }}>◈</span>
-                    <div>
-                      <div style={{
-                        fontFamily: "'Cormorant Garamond', serif", fontSize: "15px", color: "#3c2e18",
-                      }}>{lk.name}</div>
-                      <div style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "#a09070",
-                      }}>{lk.relation}</div>
-                    </div>
-                  </div>
-                ))}
+      ${char.links.length > 0 ? `
+        <div class="modal-section-label" style="margin-bottom:16px">Liens</div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          ${char.links.map(lk => `
+            <div class="modal-link">
+              <span class="modal-link-icon" style="color:${char.accent}">◈</span>
+              <div>
+                <div class="modal-link-name">${lk.name}</div>
+                <div class="modal-link-rel">${lk.relation}</div>
               </div>
             </div>
-          )}
+          `).join("")}
         </div>
-      </div>
+      ` : ""}
     </div>
-  );
+  `;
+
+  document.body.style.overflow = "hidden";
+  overlay.style.display = "flex";
+  requestAnimationFrame(() => overlay.classList.add("visible"));
+
+  const closeBtn = document.getElementById("modal-close-btn");
+  closeBtn.addEventListener("mouseenter", () => {
+    closeBtn.style.borderColor = char.accent;
+    closeBtn.style.color = char.accent;
+  });
+  closeBtn.addEventListener("mouseleave", () => {
+    closeBtn.style.borderColor = "#d8cbb0";
+    closeBtn.style.color = "#8a7a60";
+  });
+  closeBtn.addEventListener("click", (e) => { e.stopPropagation(); closeModal(); });
+  overlay.addEventListener("click", closeModal);
+  inner.addEventListener("click", (e) => e.stopPropagation());
 }
 
-export default function RPShowcase() {
-  const [selected, setSelected] = useState(null);
-  const [filter, setFilter] = useState("all");
-  const filtered = filter === "all" ? CHARACTERS : CHARACTERS.filter(c => c.genre === filter);
-
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #faf6ed; color: #3c2e18; min-height: 100vh; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f5efe4; }
-        ::-webkit-scrollbar-thumb { background: #d8cbb0; }
-        ::-webkit-scrollbar-thumb:hover { background: #c2a878; }
-        @keyframes moteRise {
-          0% { transform: translateY(0) translateX(0); opacity: 0; }
-          10% { opacity: 0.15; }
-          90% { opacity: 0.15; }
-          100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
-        }
-        @keyframes fadeSlideIn {
-          from { opacity: 0; transform: translateY(24px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes headerGlow {
-          0%, 100% { text-shadow: 0 0 30px rgba(194,134,14,0.2), 0 0 60px rgba(207,34,231,0.1); }
-          50% { text-shadow: 0 0 60px rgba(194,134,14,0.35), 0 0 100px rgba(207,34,231,0.2); }
-        }
-        @keyframes lineExpand { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      `}</style>
-      <GrainOverlay />
-      <GoldenMotes />
-      <div style={{
-        minHeight: "100vh", position: "relative", zIndex: 2,
-        fontFamily: "'Cormorant Garamond', serif",
-      }}>
-        <header style={{ textAlign: "center", padding: "80px 20px 50px" }}>
-          <div style={{
-            fontSize: "9px", letterSpacing: "8px", textTransform: "uppercase",
-            color: "#b8a070", marginBottom: "20px", animation: "fadeIn 1s 0.2s both", fontWeight: 600,
-          }}>Galerie de Personnages</div>
-          <h1 style={{
-            fontFamily: "'UnifrakturMaguntia', cursive",
-            fontSize: "clamp(38px, 7vw, 76px)", color: "#2c1e0a", letterSpacing: "4px",
-            animation: "headerGlow 5s ease-in-out infinite, fadeIn 1s both", marginBottom: "16px",
-          }}>Imaginary Friends</h1>
-          <p style={{
-            fontSize: "14px", color: "#9a8a6a", fontStyle: "italic",
-            maxWidth: "480px", margin: "0 auto 30px", lineHeight: "1.8",
-            animation: "fadeIn 1s 0.4s both",
-          }}>Cliquez sur une carte pour découvrir l'histoire complète du personnage.</p>
-          <div style={{
-            width: "200px", height: "1px", margin: "0 auto",
-            background: "linear-gradient(90deg, transparent, #c2860e55, #a01bb844, transparent)",
-            animation: "lineExpand 1s 0.6s both",
-          }} />
-        </header>
-        <div style={{
-          display: "flex", justifyContent: "center", gap: "4px",
-          padding: "0 20px 50px", flexWrap: "wrap", animation: "fadeIn 1s 0.8s both",
-        }}>
-          {GENRES.map(g => (
-            <button key={g.key} onClick={() => setFilter(g.key)} style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", fontWeight: 600,
-              color: filter === g.key ? "#2c1e0a" : "#a09070",
-              background: filter === g.key ? "linear-gradient(135deg, #c2860e12, #a01bb812)" : "transparent",
-              border: `1px solid ${filter === g.key ? "#c2860e33" : "transparent"}`,
-              padding: "8px 18px", cursor: "pointer", transition: "all 0.3s",
-            }}>{GENRE_ICONS[g.key] ? `${GENRE_ICONS[g.key]} ` : ""}{g.label}</button>
-          ))}
-        </div>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
-          gap: "24px", padding: "0 40px 80px", maxWidth: "1220px", margin: "0 auto",
-        }}>
-          {filtered.map((c, i) => (
-            <CharCard key={c.id} char={c} index={i} onClick={() => setSelected(c)} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <div style={{
-            textAlign: "center", padding: "60px 20px",
-            color: "#b8a070", fontStyle: "italic", fontSize: "14px",
-          }}>Aucun personnage dans ce genre pour le moment.</div>
-        )}
-        <footer style={{
-          textAlign: "center", padding: "40px 20px 60px", borderTop: "1px solid #e8dcc8",
-        }}>
-          <div style={{
-            fontSize: "9px", letterSpacing: "6px", textTransform: "uppercase", color: "#c8b890",
-          }}>Roleplay Character Showcase</div>
-        </footer>
-      </div>
-      {selected && <CharModal char={selected} onClose={() => setSelected(null)} />}
-    </>
-  );
+function closeModal() {
+  const overlay = document.getElementById("modal");
+  overlay.classList.remove("visible");
+  document.body.style.overflow = "";
+  setTimeout(() => { overlay.style.display = "none"; }, 400);
 }
+
+/* ── Init ── */
+document.getElementById("modal").style.display = "none";
+renderGrid();
+</script>
+</body>
+</html>
