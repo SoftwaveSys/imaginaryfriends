@@ -230,6 +230,7 @@ header { text-align: center; padding: 80px 20px 50px; }
 .modal-trait {
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
   color: #7a6840; border: 1px solid #e0d4bc; padding: 6px 14px; background: #f8f2e6;
+.modal-temper {font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; }
 }
 .modal-divider { height: 1px; margin: 0 0 36px; }
 .modal-bio { font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; }
@@ -295,6 +296,7 @@ const CHARACTERS = [
     job: "Chef pâtissier",
     genre: "tranche_de_vie",
     quote: "« Trop transparent pour jouer un rôle, trop passionné pour faire les choses à moitié. »",
+    temper: "Test personnalité",
     bio: "Test",
     personality: ["Loyal", "Optimiste", "Bienveillant", "Amical"], 
     tropes: ["Boys Love", "Âmes soeurs"],
@@ -591,7 +593,7 @@ function openModal(char) {
   <div class="modal-section-label">Personnalité</div>
       <div class="modal-traits" style="margin-bottom:32px">
         ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
-        <div class="modal-bio">${char.bio}</div>
+        <div class="modal-temper">${char.temper}</div>
       </div>
 
       <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
