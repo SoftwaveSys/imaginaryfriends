@@ -579,11 +579,6 @@ function openModal(char) {
         ${char.tropes.map(t => `<span class="modal-trope" style="color:${char.accent}; border:1px solid ${char.accent}33; background:${char.accent}0a">${t}</span>`).join("")}
       </div>
 
-        <div class="modal-section-label">Personnalité</div>
-      <div class="modal-traits" style="margin-bottom:32px">
-        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
-      </div>
-
       <div class="modal-stats">
         ${statsData.map(s => `
           <div class="modal-stat">
@@ -591,6 +586,12 @@ function openModal(char) {
             <div class="modal-stat-value">${s.value}</div>
           </div>
         `).join("")}
+      </div>
+
+  <div class="modal-section-label">Personnalité</div>
+      <div class="modal-traits" style="margin-bottom:32px">
+        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
+        <div class="modal-bio">${char.bio}</div>
       </div>
 
       <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
