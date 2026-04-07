@@ -182,8 +182,22 @@ header { text-align: center; padding: 80px 20px 50px; }
   display: flex; align-items: center; justify-content: center; transition: all 0.3s;
 }
 .modal-hero {
-  position: relative; height: 300px;
-  display: flex; align-items: flex-end; padding: 40px;
+  position: relative; padding: 40px;
+  display: flex; align-items: center; gap: 28px;
+}
+.modal-hero-avatar {
+  width: 120px; height: 120px; border-radius: 50%; flex-shrink: 0;
+  object-fit: cover; border: 3px solid #e8dcc8;
+  box-shadow: 0 6px 30px rgba(120,90,40,0.15);
+}
+.modal-hero-avatar-placeholder {
+  width: 120px; height: 120px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42px; font-family: 'UnifrakturMaguntia', cursive;
+  opacity: 0.2; border: 3px solid #e8dcc8;
+}
+@media (max-width: 500px) {
+  .modal-hero { flex-direction: column; text-align: center; gap: 16px; }
 }
 .modal-hero-fade {
   position: absolute; inset: 0;
@@ -321,7 +335,7 @@ const CHARACTERS = [
       { name: "Seoyeon", relation: "Petite soeur" }
     ],
     accent: "#c2860e",
-    img: "https://i.ibb.co/rffJqP5Q/result-paste-file-1.jpg",
+    img: "https://i.ibb.co/Wpp179BH/result-paste-file-1.jpg",
   },
   {
     id: 2,
@@ -579,8 +593,11 @@ function openModal(char) {
 
   inner.innerHTML = `
     <button class="modal-close" id="modal-close-btn">✕</button>
-    <div class="modal-hero" style="background: ${char.img ? `url(${char.img}) center/cover` : `linear-gradient(170deg, ${char.accent}28 0%, #f5efe4 40%, ${char.accent}12 100%)`}">
-      <div class="modal-hero-fade"></div>
+    <div class="modal-hero" style="background: linear-gradient(170deg, ${char.accent}15 0%, #fefcf5 60%, ${char.accent}08 100%);">
+      ${char.img
+        ? `<img class="modal-hero-avatar" src="${char.img}" alt="${char.name}" style="border-color:${char.accent}44">`
+        : `<div class="modal-hero-avatar-placeholder" style="color:${char.accent}; background:linear-gradient(135deg, ${char.accent}12, ${char.accent}06); border-color:${char.accent}33">${char.name[0]}</div>`
+      }
       <div class="modal-hero-info">
         <div class="modal-genre" style="color:${char.accent}">${icon} ${char.genre.replace("_", " ")}</div>
         <h1 class="modal-name">${char.name}</h1>
