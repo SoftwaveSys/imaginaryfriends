@@ -265,6 +265,62 @@ header { text-align: center; padding: 80px 20px 50px; }
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #a09070;
 }
 
+/* ── Tabs ── */
+.modal-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid #e8dcc8; margin-bottom: 32px;
+}
+.modal-tab {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;
+  color: #a09070; background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 12px 24px; cursor: pointer; transition: all 0.3s;
+  flex: 1; text-align: center;
+}
+.modal-tab:hover { color: #6a5a3a; }
+.modal-tab.active { border-bottom-color: currentColor; }
+.modal-tab-content { display: none; }
+.modal-tab-content.active { display: block; }
+
+/* ── Likes/Dislikes ── */
+.likes-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px;
+}
+@media (max-width: 500px) {
+  .likes-grid { grid-template-columns: 1fr; }
+}
+.likes-col h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 10px;
+}
+.likes-item {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 6px 12px; font-size: 14px; color: #5a4a30; line-height: 1.6;
+  background: #f8f2e6; border: 1px solid #e8dcc8; margin-bottom: 4px;
+}
+
+/* ── Bag / Playlist / 3am / Flags ── */
+.section-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 36px; }
+.section-item {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 8px 14px; background: #f8f2e6; border: 1px solid #e8dcc8;
+  font-size: 14px; color: #5a4a30; line-height: 1.6;
+}
+.section-item-icon { font-size: 10px; flex-shrink: 0; }
+
+/* ── Flags ── */
+.flags-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px;
+}
+@media (max-width: 500px) {
+  .flags-grid { grid-template-columns: 1fr; }
+}
+.flags-col h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 10px;
+}
+
 footer {
   text-align: center; padding: 40px 20px 60px; border-top: 1px solid #e8dcc8;
 }
@@ -338,6 +394,13 @@ const CHARACTERS = [
     accent: "#c2860e",
     img: "https://i.ibb.co/Wpp179BH/result-paste-file-1.jpg",
     modal_img: "https://i.pinimg.com/736x/d9/c3/4c/d9c34c409fb3ff351df182aced538e9a.jpg",
+    likes: ["La pâtisserie", "Les comédies romantiques", "La randonnée", "La salle de sport", "La nature"],
+    dislikes: ["Le mensonge", "Le gaspillage", "La solitude prolongée"],
+    bag: ["Un carnet de recettes corné", "Son téléphone (coque abîmée)", "Un baume à lèvres", "Des clés de pick-up avec un porte-clé en forme d'ours", "Un snack protéiné"],
+    playlist: ["Golden Hour — JVKE", "Lover — Taylor Swift", "Hype Boy — NewJeans", "Best Part — Daniel Caesar", "Dynamite — BTS"],
+    three_am: ["À son prochain dessert signature", "À savoir si la personne qu'il aime va bien", "Aux souvenirs d'enfance dans la cuisine de sa mère"],
+    green_flags: ["Dit toujours ce qu'il pense", "Se souvient des petits détails", "Cuisine pour ceux qu'il aime", "Sait écouter sans juger"],
+    red_flags: ["Peut s'oublier pour les autres", "Trop transparent parfois", "Perfectionniste au travail"],
   },
   {
     id: 2,
@@ -360,7 +423,9 @@ const CHARACTERS = [
       { name: "PNJ exemple", relation: "Relation" }
     ],
     accent: "#cf22e7",
-    img: null
+    img: null,
+    modal_img: null,
+    likes: [], dislikes: [], bag: [], playlist: [], three_am: [], green_flags: [], red_flags: []
   },
   {
     id: 3,
@@ -379,7 +444,9 @@ const CHARACTERS = [
     links: [],
     pnj_links: [],
     accent: "#b8942a",
-    img: null
+    img: null,
+    modal_img: null,
+    likes: [], dislikes: [], bag: [], playlist: [], three_am: [], green_flags: [], red_flags: []
   },
   {
     id: 4,
@@ -400,7 +467,9 @@ const CHARACTERS = [
     ],
     pnj_links: [],
     accent: "#a01bb8",
-    img: null
+    img: null,
+    modal_img: null,
+    likes: [], dislikes: [], bag: [], playlist: [], three_am: [], green_flags: [], red_flags: []
   },
   {
     id: 5,
@@ -419,7 +488,9 @@ const CHARACTERS = [
     links: [],
     pnj_links: [],
     accent: "#daa520",
-    img: null
+    img: null,
+    modal_img: null,
+    likes: [], dislikes: [], bag: [], playlist: [], three_am: [], green_flags: [], red_flags: []
   },
   {
     id: 6,
@@ -442,7 +513,9 @@ const CHARACTERS = [
       { name: "Son écuyer", relation: "Fidèle serviteur" }
     ],
     accent: "#cf22e7",
-    img: null
+    img: null,
+    modal_img: null,
+    likes: [], dislikes: [], bag: [], playlist: [], three_am: [], green_flags: [], red_flags: []
   }
 ];
 
@@ -587,17 +660,19 @@ function openModal(char) {
   const statsData = [
     { label: "Date de naissance", value: char.birth },
     { label: "Astrologie", value: char.astro },
-    { label: "Nationnalité", value: char.natio },
+    { label: "Nationalité", value: char.natio },
     { label: "Métier", value: char.job },
     { label: "MBTI", value: char.mbti },
     { label: "Orientation sexuelle", value: char.sexuality }
   ];
 
+  const heroImg = char.modal_img || char.img;
+
   inner.innerHTML = `
     <button class="modal-close" id="modal-close-btn">✕</button>
     <div class="modal-hero" style="background: linear-gradient(170deg, ${char.accent}15 0%, #fefcf5 60%, ${char.accent}08 100%);">
-     ${(char.modal_img || char.img)
-  ? `<img class="modal-hero-avatar" src="${char.modal_img || char.img}" alt="${char.name}" style="border-color:${char.accent}44">`
+      ${heroImg
+        ? `<img class="modal-hero-avatar" src="${heroImg}" alt="${char.name}" style="border-color:${char.accent}44">`
         : `<div class="modal-hero-avatar-placeholder" style="color:${char.accent}; background:linear-gradient(135deg, ${char.accent}12, ${char.accent}06); border-color:${char.accent}33">${char.name[0]}</div>`
       }
       <div class="modal-hero-info">
@@ -614,79 +689,176 @@ function openModal(char) {
         ${char.tropes.map(t => `<span class="modal-trope" style="color:${char.accent}; border:1px solid ${char.accent}33; background:${char.accent}0a">${t}</span>`).join("")}
       </div>
 
-      <div class="modal-stats">
-        ${statsData.map(s => `
-          <div class="modal-stat">
-            <div class="modal-stat-label" style="color:${char.accent}">${s.label}</div>
-            <div class="modal-stat-value">${s.value}</div>
+      <!-- ── Tabs ── -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="infos" style="color:${char.accent}">☽ Infos</button>
+        <button class="modal-tab" data-tab="histoire">☼ Histoire</button>
+      </div>
+
+      <!-- ══ TAB 1 : Infos ══ -->
+      <div class="modal-tab-content active" id="tab-infos">
+
+        <div class="modal-stats">
+          ${statsData.map(s => `
+            <div class="modal-stat">
+              <div class="modal-stat-label" style="color:${char.accent}">${s.label}</div>
+              <div class="modal-stat-value">${s.value || "—"}</div>
+            </div>
+          `).join("")}
+        </div>
+
+        ${(char.likes && char.likes.length > 0) || (char.dislikes && char.dislikes.length > 0) ? `
+          <div class="likes-grid">
+            ${char.likes && char.likes.length > 0 ? `
+              <div class="likes-col">
+                <h4 style="color:#6aaa64">♡ Ce qu'il aime</h4>
+                ${char.likes.map(l => `<div class="likes-item"><span style="color:#6aaa64">✦</span> ${l}</div>`).join("")}
+              </div>
+            ` : ""}
+            ${char.dislikes && char.dislikes.length > 0 ? `
+              <div class="likes-col">
+                <h4 style="color:#c25a5a">✕ Ce qu'il n'aime pas</h4>
+                ${char.dislikes.map(d => `<div class="likes-item"><span style="color:#c25a5a">✕</span> ${d}</div>`).join("")}
+              </div>
+            ` : ""}
           </div>
-        `).join("")}
+        ` : ""}
+
+        ${char.bag && char.bag.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:12px">👜 Dans son sac</div>
+          <div class="section-items">
+            ${char.bag.map(b => `
+              <div class="section-item">
+                <span class="section-item-icon" style="color:${char.accent}">⟡</span> ${b}
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        ${char.playlist && char.playlist.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:12px">🎵 Playlist</div>
+          <div class="section-items">
+            ${char.playlist.map(p => `
+              <div class="section-item">
+                <span class="section-item-icon" style="color:${char.accent}">♪</span> ${p}
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        ${char.three_am && char.three_am.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:12px">☾ Ses 3h du matin</div>
+          <div class="section-items">
+            ${char.three_am.map(t => `
+              <div class="section-item">
+                <span class="section-item-icon" style="color:${char.accent}">✧</span> ${t}
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        ${(char.green_flags && char.green_flags.length > 0) || (char.red_flags && char.red_flags.length > 0) ? `
+          <div class="modal-section-label" style="margin-bottom:12px">⚐ Green & Red Flags</div>
+          <div class="flags-grid">
+            ${char.green_flags && char.green_flags.length > 0 ? `
+              <div class="flags-col">
+                <h4 style="color:#6aaa64">✦ Green Flags</h4>
+                ${char.green_flags.map(g => `<div class="likes-item"><span style="color:#6aaa64">☑</span> ${g}</div>`).join("")}
+              </div>
+            ` : ""}
+            ${char.red_flags && char.red_flags.length > 0 ? `
+              <div class="flags-col">
+                <h4 style="color:#c25a5a">✦ Red Flags</h4>
+                ${char.red_flags.map(r => `<div class="likes-item"><span style="color:#c25a5a">⚠</span> ${r}</div>`).join("")}
+              </div>
+            ` : ""}
+          </div>
+        ` : ""}
+
+        ${char.locations && char.locations.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:12px">☼ Où le croiser</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:36px">
+            ${char.locations.map(l => `
+              <span style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#7a6840; padding:7px 16px; background:#f8f2e6; border:1px solid #e0d4bc;">⟡ ${l}</span>
+            `).join("")}
+          </div>
+        ` : ""}
+
       </div>
 
-  <div class="modal-section-label">Personnalité</div>
-      <div class="modal-traits">
-        ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
+      <!-- ══ TAB 2 : Histoire ══ -->
+      <div class="modal-tab-content" id="tab-histoire">
+
+        <div class="modal-section-label">Personnalité</div>
+        <div class="modal-traits">
+          ${char.personality.map(t => `<span class="modal-trait">${t}</span>`).join("")}
+        </div>
+        <div class="modal-temper">${char.temper || ""}</div>
+
+        <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
+        <div style="text-align:center; font-size:13px; letter-spacing:12px; color:${char.accent}30; margin:-28px 0 20px;">✦ ☽ ☼ ☾ ✦</div>
+
+        <div class="modal-section-label" style="margin-bottom:16px">Biographie</div>
+        <div class="modal-bio">${char.bio}</div>
+
+        ${char.facts && char.facts.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:12px">☽ Facts</div>
+          <div class="section-items">
+            ${char.facts.map(f => `
+              <div class="section-item">
+                <span class="section-item-icon" style="color:${char.accent}">✧</span> ${f}
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        ${char.links && char.links.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:16px">Liens PJ</div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:${char.pnj_links && char.pnj_links.length > 0 ? '36' : '0'}px">
+            ${char.links.map(lk => `
+              <div class="modal-link">
+                <span class="modal-link-icon" style="color:${char.accent}">◈</span>
+                <div>
+                  <div class="modal-link-name">${lk.name}</div>
+                  <div class="modal-link-rel">${lk.relation}</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        ${char.pnj_links && char.pnj_links.length > 0 ? `
+          <div class="modal-section-label" style="margin-bottom:16px">Liens PNJ</div>
+          <div style="display:flex; flex-direction:column; gap:8px">
+            ${char.pnj_links.map(lk => `
+              <div class="modal-link" style="border-left:3px solid ${char.accent}44">
+                <span class="modal-link-icon" style="color:${char.accent}; opacity:0.6">☾</span>
+                <div>
+                  <div class="modal-link-name" style="color:#6a5a3a">${lk.name}</div>
+                  <div class="modal-link-rel">${lk.relation}</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
       </div>
-      <div class="modal-temper">${char.temper}</div>
-
-      <div class="modal-divider" style="background:linear-gradient(90deg, transparent, ${char.accent}44, transparent)"></div>
-      <div style="text-align:center; font-size:13px; letter-spacing:12px; color:${char.accent}30; margin:-28px 0 20px;">✦ ☽ ☼ ☾ ✦</div>
-
-      <div class="modal-section-label" style="margin-bottom:16px">Biographie</div>
-      <div class="modal-bio">${char.bio}</div>
-
-      ${char.facts.length > 0 ? `
-        <div class="modal-section-label" style="margin-bottom:12px">☽ Facts</div>
-        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:36px">
-          ${char.facts.map(f => `
-            <div style="display:flex; align-items:baseline; gap:10px; padding:8px 14px; background:#f8f2e6; border:1px solid #e8dcc8;">
-              <span style="color:${char.accent}; font-size:10px;">✧</span>
-              <span style="font-size:14px; color:#5a4a30; line-height:1.6">${f}</span>
-            </div>
-          `).join("")}
-        </div>
-      ` : ""}
-
-      ${char.locations.length > 0 ? `
-        <div class="modal-section-label" style="margin-bottom:12px">☼ Où le croiser</div>
-        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:36px">
-          ${char.locations.map(l => `
-            <span style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#7a6840; padding:7px 16px; background:#f8f2e6; border:1px solid #e0d4bc;">⟡ ${l}</span>
-          `).join("")}
-        </div>
-      ` : ""}
-
-      ${char.links.length > 0 ? `
-        <div class="modal-section-label" style="margin-bottom:16px">Liens PJ</div>
-        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:${char.pnj_links.length > 0 ? '36' : '0'}px">
-          ${char.links.map(lk => `
-            <div class="modal-link">
-              <span class="modal-link-icon" style="color:${char.accent}">◈</span>
-              <div>
-                <div class="modal-link-name">${lk.name}</div>
-                <div class="modal-link-rel">${lk.relation}</div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      ` : ""}
-
-      ${char.pnj_links.length > 0 ? `
-        <div class="modal-section-label" style="margin-bottom:16px">Liens PNJ</div>
-        <div style="display:flex; flex-direction:column; gap:8px">
-          ${char.pnj_links.map(lk => `
-            <div class="modal-link" style="border-left:3px solid ${char.accent}44">
-              <span class="modal-link-icon" style="color:${char.accent}; opacity:0.6">☾</span>
-              <div>
-                <div class="modal-link-name" style="color:#6a5a3a">${lk.name}</div>
-                <div class="modal-link-rel">${lk.relation}</div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      ` : ""}
     </div>
   `;
+
+  /* ── Tab switching ── */
+  const tabs = inner.querySelectorAll(".modal-tab");
+  const contents = inner.querySelectorAll(".modal-tab-content");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => { t.classList.remove("active"); t.style.color = "#a09070"; });
+      contents.forEach(c => c.classList.remove("active"));
+      tab.classList.add("active");
+      tab.style.color = char.accent;
+      const target = document.getElementById("tab-" + tab.dataset.tab);
+      if (target) target.classList.add("active");
+    });
+  });
 
   document.body.style.overflow = "hidden";
   overlay.style.display = "flex";
