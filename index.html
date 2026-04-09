@@ -57,7 +57,7 @@ header { text-align: center; padding: 80px 20px 50px; }
 }
 .header-title {
   font-family: 'UnifrakturMaguntia', cursive;
-  font-size: clamp(38px, 7vw, 76px); color: #2c1e0a; letter-spacing: 4px;
+  font-size: clamp(38px, 7vw, 76px); color: #433725; letter-spacing: 4px;
   animation: headerGlow 5s ease-in-out infinite, fadeIn 1s both; margin-bottom: 16px;
 }
 .header-desc {
@@ -82,7 +82,7 @@ header { text-align: center; padding: 80px 20px 50px; }
   padding: 8px 18px; cursor: pointer; transition: all 0.3s;
 }
 .filter-btn.active {
-  color: #2c1e0a;
+  color: #433725;
   background: linear-gradient(135deg, #c2860e12, #a01bb812);
   border-color: #c2860e33;
 }
@@ -127,7 +127,7 @@ header { text-align: center; padding: 80px 20px 50px; }
 .card-body { padding: 20px 24px 24px; }
 .card-name {
   font-family: 'UnifrakturMaguntia', cursive;
-  font-size: 23px; color: #2c1e0a; margin: 0 0 3px; letter-spacing: 1px;
+  font-size: 23px; color: #473a27; margin: 0 0 3px; letter-spacing: 1px;
 }
 .card-alias {
   font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase;
@@ -223,7 +223,7 @@ header { text-align: center; padding: 80px 20px 50px; }
   padding-left: 20px; margin: 0 0 36px; line-height: 1.8;
 }
 .modal-section-label {
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  font-size: 14px; letter-spacing: 4px; text-transform: uppercase;
   color: #a09070; margin-bottom: 12px; font-weight: 600;
 }
 .modal-tropes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
@@ -254,7 +254,7 @@ header { text-align: center; padding: 80px 20px 50px; }
 }
 .modal-temper { font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; text-align: justify;}
 .modal-divider { height: 1px; margin: 0 0 36px; }
-.modal-bio { font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; }
+.modal-bio { font-size: 16px; line-height: 2; color: #5a4a30; margin-bottom: 36px; text-align: justify;}
 .modal-link {
   display: flex; align-items: center; gap: 14px;
   padding: 14px 18px; background: #f8f2e6; border: 1px solid #e8dcc8;
@@ -367,7 +367,7 @@ const CHARACTERS = [
   {
     id: 1,
     name: "Kang Geonwoo",
-    alias: "Chef Kang ✦ Woo",
+    alias: "aka. Chef Kang, Woo",
     faceclaim: "Wonho ✦ Soliste",
     astro: "☉ Poisson ☽ Bélier ↑ Capricorne",
     birth: "15 mars 1994, 32 ans",
@@ -379,11 +379,10 @@ const CHARACTERS = [
     genre: "tranche_de_vie",
     quote: "« Trop transparent pour jouer un rôle, trop passionné pour faire les choses à moitié. »",
     temper: "Geonwoo est ce qu'on appelle un Golden Retriever Boy ; un être solaire qui existe par le sourire des autres. Il a cette bienveillance chaleureuse, ce sourire inépuisable et cette sincérité déconcertante : il dit ce qu'il pense, ce qu'il ressent avec honnêteté. Pas dans le sens où il pourrait être une grande gueule, mais simplement parce qu'il est transparent et juge que chacun mérite de savoir.<br>Son rapport aux autres est dans le même état d'esprit, car il est proche des gens, les faisant parfois passer avant sa propre personne. Un charme qui se dégage de cette âme vraie, spontanée, qui attire sans calculs.<br>Mais sous cette douceur, il y a une rigueur, acquise grâce à son métier. Woo devient précis, concentré, avec un soupçon de perfectionnisme.<br>Pour finir, c'est un GRAND romantique. Il aime surprendre et être surpris. Lorsqu'il aime, il donne tout de sa personne et pourrait faire des milliers de kilomètres pour voir l'être aimé.",
-    bio: "Test",
+    bio: "Notre Geonwoo dut grandir rapidement, porter des responsabilités. Emmener son petit frère à l’école tous les matins était devenu une routine. C’était une quête simple, mais l’école en elle-même pouvait l’être beaucoup moins. Deux garçons pauvres, élevés par une mère seule. Cela était un sujet parfait pour attiser le harcèlement de la part de leurs camarades.<br>Cette mauvaise expérience l'avait fait détester l’école. Mais fidèle à lui-même, Woo restait optimiste. Les écoles professionnelles lui correspondaient mieux, plus adaptées à son envie de création. Il voulait travailler dans les métiers de bouche. Qu'est-ce qui donnait le sourire aux autres ? Une belle et délicieuse pâtisserie.<br><br>C’est ainsi que le jeune coréen apprit le métier dans plusieurs établissements. Londres, Séoul, mais surtout Paris ; il y avait passé trois années sous les ordres d’un chef réputé d’un palace. C’est là que la rigueur et le talent du garçon se révélèrent réellement.<br>Après plusieurs années d’apprentissage, le pâtissier se sentait prêt à rentrer dans son pays. Il trouva sa place dans une entreprise, un lieu où l’on confectionnait des joyaux comestibles. La Maison Seolhwa. Ce nom était inscrit sur sa veste depuis six années maintenant, à côté du sien. Après avoir montrer son talent autant en pâtisserie que dans le leadership ; la mention “Chef” était venue s’y ajouter.",
     personality: ["Loyal", "Optimiste", "Bienveillant", "Amical"], 
     tropes: ["Boys Love", "Âmes soeurs"],
-    facts: ["Sa pâtisserie préférée est le Paris-Brest.", "Woo a toujours été économe à cause de son enfance, il n'ai pas radin, mais il a toujours mis de côté.", "Il conduit un pick-up.", "Il adore la nature et faire de la randonnée. Passer un week-end loin de tout ne lui fait pas peur.", "Woo, est un habitué de la salle de sport.", "C'est un grand romantique ! Bien sûr qu'il adore les comédies romantiques."],
-    locations: ["Le bar du quartier nord", "La bibliothèque municipale", "Les toits de la ville"],
+facts: ["Sa pâtisserie préférée est le Paris-Brest, mais c'est un adorateur des gâteaux aux fruits.", "Woo a toujours été économe à cause de son enfance ; il n'est pas radin, mais il a toujours mis de côté.", "Il conduit un pick-up, car c'est plus pratique. Woo avait hésité avec un fourgon, mais le pick-up a plus de style.", "Il adore la nature et la randonnée. Passer un week-end loin de tout ne lui fait pas peur.", "Woo est un habitué de la salle de sport ; par périodes, il y va quotidiennement.", "C'est un grand romantique ! Bien sûr qu'il adore les comédies romantiques.", "Son père ne les a pas abandonnés, il est décédé dans un accident de travail. Sur les chantiers de l'époque, il s'est fait percuter par une poutre en fer.", "Sa mère s'est remariée avec un homme d'un milieu social différent."],    locations: ["Chez lui, à l'est de Séoul", "Sa salle de sport préférée", "Au travail, à la Maison Seolhwa"],
     links: [
       { name: "Lim Hajun", relation: "Âme Soeur" }
     ],
@@ -396,11 +395,11 @@ const CHARACTERS = [
     modal_img: "https://i.pinimg.com/736x/d9/c3/4c/d9c34c409fb3ff351df182aced538e9a.jpg",
     likes: ["Hajun", "La brise légère au printemps, lorsqu'il fait beau", "Les comédies romantiques", "La nature", "Les endroits baignés par le soleil", "Les personnes avec les mêmes valeurs que les siennes"],
     dislikes: ["Le mensonge", "Le gaspillage", "L'injustice et ceux qui la créer", "Tous les comportements qui visent à blesser quelqu'un"],
-    bag: ["Un carnet de recettes corné", "Son téléphone (coque abîmée)", "Un baume à lèvres", "Des clés de pick-up avec un porte-clé en forme d'ours", "Un snack protéiné"],
-    playlist: ["Golden Hour — JVKE", "Lover — Taylor Swift", "Hype Boy — NewJeans", "Best Part — Daniel Caesar", "Dynamite — BTS"],
-    three_am: ["À son prochain dessert signature", "À savoir si la personne qu'il aime va bien", "Aux souvenirs d'enfance dans la cuisine de sa mère"],
+    bag: ["Un carnet de recettes corné", "Son téléphone", "Un baume à lèvres", "Des clés de pick-up avec un porte-clé en forme d'ours", "Un snack protéiné"],
+    playlist: ["Apocalypse — Cigarettes After Sex", "Holocene — Bon Iver", "Be Your Man — Ivan & Alyosha", "Don't Delete The Kisses — Wolf Alice", "HUMBLE. — Kendrick Lamar", "Hula Hoops — DPR Live", "Celebration — BewhY", "Dali, Van, Picasso — Beenzino"],
+    three_am: ["À son prochain dessert signature", "À savoir si la personne qu'il aime va bien", "À quand il va trouver le sommeil, parce qu'il dort toujours à 3h du matin"],
     green_flags: ["Dit toujours ce qu'il pense", "Se souvient des petits détails", "Cuisine pour ceux qu'il aime", "Sait écouter sans juger"],
-    red_flags: ["Peut s'oublier pour les autres", "Trop transparent parfois", "Perfectionniste au travail"],
+    red_flags: ["Peut s'oublier pour les autres", "Trop optimiste, voit le bien partout", "Perfectionniste au travail"],
   },
   {
     id: 2,
