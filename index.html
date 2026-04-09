@@ -613,7 +613,7 @@ function renderGrid() {
       <div class="card-img" style="background: ${char.img ? `url(${char.img}) center/cover` : `linear-gradient(170deg, ${char.accent}20 0%, #f5efe4 50%, ${char.accent}10 100%)`}">
         ${!char.img ? `<span class="card-initial" style="color:${char.accent}">${char.name[0]}</span>` : ""}
         <div class="card-img-fade"></div>
-        <div class="card-genre" style="color:${char.accent}; border: 1px solid ${char.accent}33">${icon} ${char.genre.replace("_", " ")}</div>
+        <div class="card-genre" style="color:${char.accent}; border: 1px solid ${char.accent}33">${icon} ${char.genre.replaceAll("_", " ")}</div>
       </div>
       <div class="card-body">
         <h3 class="card-name">${char.name}</h3>
@@ -675,7 +675,7 @@ function openModal(char) {
         : `<div class="modal-hero-avatar-placeholder" style="color:${char.accent}; background:linear-gradient(135deg, ${char.accent}12, ${char.accent}06); border-color:${char.accent}33">${char.name[0]}</div>`
       }
       <div class="modal-hero-info">
-        <div class="modal-genre" style="color:${char.accent}">${icon} ${char.genre.replace("_", " ")}</div>
+        <div class="modal-genre" style="color:${char.accent}">${icon} ${char.genre.replaceAll("_", " ")}</div>
         <h1 class="modal-name">${char.name}</h1>
         <div class="modal-fc" style="color:${char.accent}">${char.alias} — Source : ${char.faceclaim}</div>
       </div>
